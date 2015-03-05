@@ -30,9 +30,10 @@
     <script>
         var map;
         require( [ "esri/map", "esri/layers/KMLLayer", "dojo/parser", "dojo/dom-style",
-            "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dojo/domReady!"] ,
+                    "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dojo/domReady!",
+                    "dojo/_base/connect"] ,
         function(
-            Map, KMLayer, parser, domSytle
+            Map, KMLayer, parser, domSytle, connect
         ){
             <!-- this configuration makes the map start at hamilton, and zoomed in enough to look at hamilton-->
             map = new Map("map", {
@@ -48,6 +49,21 @@
             schoolLayer.on("load", function (){
                 domSytle.set("loading", "display", "none");
             })
+
+            var librariesURL = "http://opendata.hamilton.ca/KML/Libraries.zip";
+            var libraryLayer = new KMLayer(librariesURL);
+            map.addLayer(libraryLayer);
+
+
+
+            var visible = false;
+            map.on("click", myClickHandler);
+            function myClickHandler(evt) {
+                if(!visible) schoolLayer.hide();
+                else schoolLayer.show();
+                visible = !visible;
+            }
+
 
 
 
